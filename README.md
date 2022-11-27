@@ -1,13 +1,34 @@
 # Bee Button
 
 These are the bee buttons, these buttons can be controlled with the use of MQTT.
-They send u if they have been pressed, double pressed or long pressed. And in turn, U can tell them to do light effects or play music. U can use the MQTT protocol with practically every programming language. The only thing u need is to have a MQTT broker like mosquito and be connected to the same network as that MQTT broker and the gateway button.
+They send u if they have been pressed, double pressed or long pressed. And in turn, U can tell them to do light effects or play music. U can use the MQTT protocol with practically every programming language. The only thing u need is to have a MQTT broker like mosquito and be connected to the same network as that MQTT broker and the gateway button. All files related to the project can be found on [Github](https://github.com/utwente-interaction-lab/Bee-Buttons). If u have any questions please mail to m.c.pijnappel@student.utwente.nl
+
+## Starting up
+
+There are two kinds of buttons gateway and normal. This can be changed via the SD Card which will be explained later on.
+When starting up they show there state with colors.
+
+### Gateway Button
+
+- Blinking cyan/light blue -> Not connected to anything
+- Blinking Blue -> Connected to WiFi
+- Blinking Purple -> Connected to MQTT
+
+If after a while it is not blinking purple, there might be something wrong with the WiFi or MQTT broker.
+U can start sending commands once it blinks purple
+
+### Normal Button
+
+- Blinking Red -> Not connected to the mesh.
+- Blinking Green -> Connected to Mesh.
+
+U can send commands once the gateway is blinking purple and the button u want to target is blinking green.
 
 ## Network structure
 
 A MQTT tutorial is available at the Interaction Lab GitHub [here](https://github.com/utwente-interaction-lab/MQTT-Communication)
 
-The network is kinda set up like a beehive. Every group of nodes has one queen/gateway that tells the other buttons what to do and knows what they did. The queen then tells this over Wi-Fi to the MQTT broker. And U can communicate with the queen/gateway as well via the MQTT broker. Besides Wi-Fi, the buttons including the queen/gateway communicate with each other in a mesh network. This means that they do not have to be connected to every node they need to talk to, but can do that via other buttons. So ***u have to make sure that the queen/gateway, your computer and the MQTT broker all are on the same network***, this can be done with the help of the config file on the SD card. Also, Wi-Fi has channels in the case of 2.4Ghz there are 12. U also have to ***make sure that all buttons have this fixed to the same channel***, which can be done in the config file. That channel also has to match one that ur Wi-Fi router/access point uses. U can give this a fixed value in the router software, otherwise, u have to check this with a WiFi scan app and change the config file. ***U can not use eduroam*** for your network, the button cannot connect to this.
+The network is kinda set up like a beehive. Every group of nodes has one queen/gateway that tells the other buttons what to do and knows what they did. The queen then tells this over Wi-Fi to the MQTT broker. And U can communicate with the queen/gateway as well via the MQTT broker. Besides Wi-Fi, the buttons including the queen/gateway communicate with each other in a mesh network. This means that they do not have to be connected to every node they need to talk to, but can do that via other buttons. So ***u have to make sure that the queen/gateway, your computer and the MQTT broker all are on the same network***, this can be done with the help of the config file on the SD card. Also, Wi-Fi has channels in the case of 2.4Ghz there are 12. U also have to ***make sure that all buttons have this fixed to the same channel***, which can be done in the config file. That channel also has to match one that ur Wi-Fi router/access point uses. U can give this a fixed value in the router software, otherwise, u have to check this with a WiFi scan app and change the config file. ***U can not use eduroam*** for your network, the button cannot connect to this. For the tutorial a router and server are available to use, all buttons configured as a gateway connect to this standard. Do be carefull since all groups connect to this meaning that all groups can send commands to ur buttons.
 
 ## SD card
 
@@ -68,3 +89,9 @@ These are the commands;
   - `Show` - Gives back the battery voltage and percentage, but also show the battery capacity with the LEDs. 
 
 ## Extra pins available
+
+When u screw open the button there are some pins extra available to use. U do have to edit the code to use them. The code is written with platformIO and the code is on the GitHub. Installing [platformio](https://platformio.org/) is fairly easy with Visual Studio Code.
+
+- IC3/IC4: These are pins for the I2C protocol, lots of digital sensors can be connected to these pins like accelerometer/gyroscope. 
+- Analoge Pins: If u want to do something analoge it can be done with these pins. Make sure it is all 3.3V, since that is what the controller has, has maximum input and supplies.
+- LED Strip PINS: If u want to use more LEDs u can connect a neopixel/ws2812b strip on these pins. At the moment this might not work with every buttons since some LEDs are broken and might not pass on the signal to the end. The LED strip would be LED number 13. But in the case of some buttons this might be off since some jumper wires are soldered over LEDs.
