@@ -10,8 +10,10 @@ from paho.mqtt import client as mqtt_client
 # Variable that stores the list of nodes
 nodeList = []
 
-# some variables related to MQTT
-broker = 'localhost'
+# some variables related to MQTT localhost is when u use your own laptop
+# broker = 'localhost'
+broker = "192.168.0.102"
+
 port = 1883
 topic = "maximilliaan/"
 
