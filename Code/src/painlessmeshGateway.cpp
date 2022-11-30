@@ -88,12 +88,12 @@ void mqttCallback(char *topic, uint8_t *payload, unsigned int length)
     // checks if ut was ment for itself or a other node on the mesh
     if (targetStr == "gateway")
     {
-        if (msg == "getNodes")
+        if (msg == ":getNodes")
         {
             auto nodes = mesh.getNodeList(true);
             String str;
             for (auto &&id : nodes)
-                str += String(id) + String(" / ");
+                str += String("/") + String(id);
 
             mqttClient.publish(MQTT_Topic.c_str(), str.c_str());
         }
