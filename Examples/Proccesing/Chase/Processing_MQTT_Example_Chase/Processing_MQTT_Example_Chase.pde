@@ -1,4 +1,4 @@
-//https://github.com/256dpi/processing-mqtt
+// based on https://github.com/256dpi/processing-mqtt
 
 
 //import mqtt library, make sure u have downloaded the library.
@@ -61,7 +61,7 @@ void messageReceived(String topic, byte[] payload) {
     Message = Message.substring(1, Message.length());
     nodeList = split(Message, '/');
 
-    //Changes id of gatewat to gateway
+    //Changes id of gateway to gateway
     nodeList[0] = "gateway";
 
     // this is for a game of chase where u have to press the button that is Green
@@ -80,6 +80,8 @@ void messageReceived(String topic, byte[] payload) {
   if (subTopic.equals(nodeList[Chosen]) == true & Message.equals("Pressed")) {
     println("Chosen has been pressed");
     int oldChosen = Chosen;
+
+    // ensures the same button is not picked again
     while (Chosen == oldChosen) {
       Chosen =int(random(nodeList.length));
 
