@@ -1,14 +1,14 @@
-﻿What;How Many Per Button;How Many  Per Package;Where From;Product Number;Link
-Accu 1250mAh;1;1;opencircuits;n.v.t.;https://opencircuit.shop/product/lithium-ion-polymer-batterij-3.7v-1250mah-jst
-Threaded inserts M3;6;100;RS Components;204-0616;https://nl.rs-online.com/web/p/threaded-inserts/2040616 
-Screws 10mm M3;3;100;RS Components;560-596;https://nl.rs-online.com/web/p/machine-screws/0560596 
-Screws 30mm M3;3;100;RS Components;560-647;https://nl.rs-online.com/web/p/machine-screws/0560647 
-Speakers;1;1;RS Components;754-2090;https://nl.rs-online.com/web/p/miniature-speakers/7542090
-dfRobot firebeetle micro controller;1;1;TinyTronics;SKU:004013;https://www.tinytronics.nl/shop/en/development-boards/microcontroller-boards/with-wi-fi/dfrobot-firebeetle-esp32-iot-microcontroller-wi-fi-and-bluetooth-seperate-headers
-Springs;3;Depends on order size;ALCOMEX;D1500;https://webshop.alcomex.nl/drukveer-vst-o-0-63x6-30x11-50-mm-d1500
-anti slip pads;3;75;RS Components;173-5963;https://nl.rs-online.com/web/p/anti-slip-pads/1735963
-Micro SD card 32GB;1;1;IAPC;;
-PCB;1;Depends on order size;JLCPCB;;
-White Plexiglass 3mm;1 window ;n.v.t.;kunstofplatenshop.nl;;
-3D print Filament;5 parts;6 per kilo ;;;
-Hook & Loop Tape;1 strip;5m per rol;RS Components;890-4159;https://nl.rs-online.com/web/p/hook-loop-tapes/8904159
+﻿What,How Many Per Button,How Many  Per Package,Where From,Product Number,Link
+Accu 1250mAh,1,1,opencircuits,n.v.t.,https://opencircuit.shop/product/lithium-ion-polymer-batterij-3.7v-1250mah-jst
+Threaded inserts M3,6,100,RS Components,204-0616,https://nl.rs-online.com/web/p/threaded-inserts/2040616 
+Screws 10mm M3,3,100,RS Components,560-596,https://nl.rs-online.com/web/p/machine-screws/0560596 
+Screws 30mm M3,3,100,RS Components,560-647,https://nl.rs-online.com/web/p/machine-screws/0560647 
+Speakers,1,1,RS Components,754-2090,https://nl.rs-online.com/web/p/miniature-speakers/7542090
+dfRobot firebeetle micro controller,1,1,TinyTronics,SKU:004013,https://www.tinytronics.nl/shop/en/development-boards/microcontroller-boards/with-wi-fi/dfrobot-firebeetle-esp32-iot-microcontroller-wi-fi-and-bluetooth-seperate-headers
+Springs,3,Depends on order size,ALCOMEX,D1500,https://webshop.alcomex.nl/drukveer-vst-o-0-63x6-30x11-50-mm-d1500
+anti slip pads,3,75,RS Components,173-5963,https://nl.rs-online.com/web/p/anti-slip-pads/1735963
+Micro SD card 32GB,1,1,IAPC,,
+PCB,1,Depends on order size,JLCPCB,,
+White Plexiglass 3mm,1 window ,n.v.t.,kunstofplatenshop.nl,,
+3D print Filament,5 parts,6 per kilo ,,,
+Hook & Loop Tape,1 strip,5m per rol,RS Components,890-4159,https://nl.rs-online.com/web/p/hook-loop-tapes/8904159
