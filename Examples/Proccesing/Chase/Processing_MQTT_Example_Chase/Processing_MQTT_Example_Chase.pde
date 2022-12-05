@@ -91,7 +91,7 @@ void messageReceived(String topic, byte[] payload) {
 
       if (winCounter >= Win) {
         client.publish(meshName + "/to/broadcast", ":Rainbow");
-        client.publish(meshName + "/to/broadcast", ":Play:waterloo");
+        client.publish(meshName + "/to/broadcast", ":Play:dance");
       } else {
         client.publish(meshName + "/to/broadcast", ":Full:Blue");
 

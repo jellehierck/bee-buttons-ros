@@ -93,7 +93,7 @@ def subscribe(client: mqtt_client):
             if Win == winCounter:
                 client.publish(topic + "to/broadcast", ":Rainbow")
 
-                client.publish(topic + "to/broadcast", ":Play:Survivor")
+                client.publish(topic + "to/broadcast", ":Play:dance")
 
             else:
                 client.publish(topic + "to/broadcast", ":Full:Purple")
