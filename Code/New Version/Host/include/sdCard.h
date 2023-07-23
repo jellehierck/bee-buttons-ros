@@ -3,7 +3,7 @@
 #include "general.h"
 #include "SD.h"
 #include "FS.h"
-#include "SPI.h"
+
 #include <ArduinoJson.h>
 // struct Config
 // {

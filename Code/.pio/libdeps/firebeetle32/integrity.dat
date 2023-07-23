@@ -1,0 +1,6 @@
+bblanchon/ArduinoJson@^6.19.4
+mathertel/OneButton@^2.0.3
+fastled/FastLED@^3.5.0
+painlessmesh/painlessMesh@^1.5.0
+knolleary/PubSubClient@^2.8
+esphome/ESP32-audioI2S@^2.1.0

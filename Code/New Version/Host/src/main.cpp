@@ -5,15 +5,12 @@
 #include <Arduino.h>
 #include "general.h"
 #include "painlessmeshfiles.h"
-#include "audiofiles.h"
-#include "button.h"
-#include "lights.h"
+#include "display.h"
 #include "sdCard.h"
 #include <ArduinoJson.h>
-#include "battery.h"
 Config config;
-#include "painlessmeshGateway.h"
 
+void testdrawtext(char *text, uint16_t color);
 // setup of all functions and button parts are called here
 void setup()
 {
@@ -22,69 +19,35 @@ void setup()
   delay(2000);
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, LOW);
+
   SDCARD_SETUP();
-  leds_setup();
+
+  // leds_setup();
   delay(1000);
   Update_Firmware();
+  displaySetup();
 
-  Serial.println(BatteryPercentage());
-  // only lets the code run when the battery is full enough
-  if (BatteryPercentage() > 2)
-  {
-    // checks if a button is a gateway or just a normal button.
-
-    if (config.GATEWAY_BOOL)
-    {
-      Gateway_Mesh_Setup();
-      Serial.println("This is the gateway");
-      BlinkMode("Cyan");
-    }
-    else if (!config.GATEWAY_BOOL)
-    {
-      painlessmesh_setup();
-      Serial.println("this is not the gateway!");
-      BlinkMode("Red");
-    }
-
-    if (String(config.Mesh_PASSWORD) == "ditisniettekort" & String(config.Mesh_SSID) == "test")
-    {
-      BlinkMode("Yellow");
-    }
-
-    audio_setup();
-
-    button_setup();
-  }
-  else if (BatteryPercentage() < 3)
-  {
-
-    Show_Bat();
-  }
+  painlessmesh_setup();
+  Serial.println("This is the gateway");
 }
 
 // all functions that need be kept running are put here
 void loop()
 {
-  leds_loop();
-  // only leds the code run when the battery is full enough
-  if (BatteryPercentage() > 2)
-  {
-    audio_loop();
 
-    button_loop();
-    // checks if a button is a gateway or just a normal button.
-    if (config.GATEWAY_BOOL)
-    {
-      Gateway_Mesh_Loop();
-    }
-    else if (!config.GATEWAY_BOOL)
-    {
-      mesh_loop();
-    }
-  }
-  else if (BatteryPercentage() < 3)
-  {
+  mesh_loop();
+  String message = Serial.readString();
+  
 
-    Show_Bat();
-  }
+if(message != ""){
+  message.trim();
+  // message  += " test"; 
+  int nodeNumberindexEnd = message.indexOf(':');
+
+  String nodeNumber = message.substring(0, nodeNumberindexEnd);
+  String Command = message.substring(nodeNumberindexEnd);
+  uint32_t nodeNumberInt = (nodeNumber.substring(0,9).toInt()*10) + nodeNumber.substring(9).toInt();
+  mesh.sendSingle(nodeNumberInt, Command);
+
+}
 }

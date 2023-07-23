@@ -1,7 +1,7 @@
 
 // all functions related to the sd card
 #include "sdCard.h"
-#include "lights.h"
+
 
 const char *filename = "/config.txt";
 
@@ -31,7 +31,7 @@ void Update_Firmware()
 // if firmware is found it turns solid green
     if (firmware)
     {
-        FullMode("Green");
+
 
         Update.begin(firmware.size(), U_FLASH);
         Update.writeStream(firmware);
@@ -55,7 +55,7 @@ void Update_Firmware()
         {
             Serial.println(F("Firmware rename error!"));
         }
-        FullMode("Blue");
+
         delay(2000);
 
         ESP.restart();
@@ -84,17 +84,9 @@ void READ_CONFIG(const char *filename, Config &config)
     strlcpy(config.Mesh_PASSWORD, doc["MESH_PASSWORD"], sizeof(config.Mesh_PASSWORD));
     strlcpy(config.Mesh_Name, doc["MESH_NAME"], sizeof(config.Mesh_Name));
 
-    config.GATEWAY_BOOL = doc["GATEWAY"];
-    config.Channel = doc["WIFI_CHANNEL"];
-    strlcpy(config.WIFI_PASSWORD, doc["WIFI_PASSWORD"], sizeof(config.Mesh_PASSWORD));
-    strlcpy(config.WIFI_SSID, doc["WIFI_SSID"], sizeof(config.WIFI_SSID));
-
-    strlcpy(config.MQTT_IP, doc["MQTT_IP"], sizeof(config.MQTT_IP));
-    config.MQTT_PORT = doc["MQTT_PORT"];
     Serial.println(config.Mesh_PORT);
-
+    config.Channel = doc["WIFI_CHANNEL"];
     config.Brightness = doc["BRIGHTNESS"];
-    config.Volume = doc["VOLUME"];
 
     file.close();
     }
@@ -103,20 +95,11 @@ void READ_CONFIG(const char *filename, Config &config)
     else{
     
     config.Mesh_PORT = 1111;
+    config.Channel = 6;
     strlcpy(config.Mesh_SSID, "test", sizeof(config.Mesh_SSID));
     strlcpy(config.Mesh_PASSWORD, "ditisniettekort", sizeof(config.Mesh_PASSWORD));
     strlcpy(config.Mesh_Name, "test", sizeof(config.Mesh_Name));
-
-    config.GATEWAY_BOOL = false;
-    config.Channel = 6;
-    strlcpy(config.WIFI_PASSWORD, "test", sizeof(config.Mesh_PASSWORD));
-    strlcpy(config.WIFI_SSID, "test", sizeof(config.WIFI_SSID));
-
-    strlcpy(config.MQTT_IP, "test", sizeof(config.MQTT_IP));
-    config.MQTT_PORT = 1883;
-    
-
     config.Brightness = 100;
-    config.Volume = 10;
+
     }
 }
