@@ -37,17 +37,24 @@ void loop()
 
   mesh_loop();
   String message = Serial.readString();
-  
 
-if(message != ""){
-  message.trim();
-  // message  += " test"; 
-  int nodeNumberindexEnd = message.indexOf(':');
+  if (message != "")
+  {
+    message.trim();
+    // message  += " test";
+    int nodeNumberindexEnd = message.indexOf(':');
 
-  String nodeNumber = message.substring(0, nodeNumberindexEnd);
-  String Command = message.substring(nodeNumberindexEnd);
-  uint32_t nodeNumberInt = (nodeNumber.substring(0,9).toInt()*10) + nodeNumber.substring(9).toInt();
-  mesh.sendSingle(nodeNumberInt, Command);
+    String nodeNumber = message.substring(0, nodeNumberindexEnd);
+    String Command = message.substring(nodeNumberindexEnd);
+    if (nodeNumber == "Broadcast")
+    {
+      mesh.sendBroadcast(Command);
+    }
+    else
+    {
 
-}
+      uint32_t nodeNumberInt = (nodeNumber.substring(0, 9).toInt() * 10) + nodeNumber.substring(9).toInt();
+      mesh.sendSingle(nodeNumberInt, Command);
+    }
+  }
 }
