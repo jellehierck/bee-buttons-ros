@@ -27,7 +27,6 @@ struct Config
     char Mesh_SSID[64];
     char Mesh_PASSWORD[64];
     int Mesh_PORT;
-    int Brightness;
     char Mesh_Name[64];
     int Channel;
 };
