@@ -20,13 +20,7 @@ Chosen = 0
 
 
 def serial_ports():
-    """ Lists serial port names
 
-        :raises EnvironmentError:
-            On unsupported or unknown platforms
-        :returns:
-            A list of the serial ports available on the system
-    """
     if sys.platform.startswith('win'):
         ports = ['COM%s' % (i + 1) for i in range(256)]
     elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
@@ -49,8 +43,8 @@ def serial_ports():
 
 
 if __name__ == '__main__':
-    print(serial_ports()[0])
-    ser = serial.Serial(serial_ports()[0],115200)
+    print(serial_ports())
+    ser = serial.Serial(serial_ports()[1],115200)
     # functie die lijst van nodes opvraagt
     ser.write(b'Broadcast:blue')
     # test = ser.in_waiting()
