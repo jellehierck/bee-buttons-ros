@@ -2,7 +2,8 @@ import random
 import serial
 import sys
 import glob
-
+import serial.tools.list_ports
+import time
 
 
 # Variable that stores the list of nodes
@@ -43,10 +44,25 @@ def serial_ports():
 
 
 if __name__ == '__main__':
-    print(serial_ports())
-    ser = serial.Serial(serial_ports()[1],115200)
+    # print(serial_ports())
+    # ser = serial.Serial(serial_ports()[1],115200)
     # functie die lijst van nodes opvraagt
-    ser.write(b'Broadcast:blue')
+    ports = list(serial.tools.list_ports.comports())
+    for p in ports:
+        if "USB Serial Device" in p.description:
+            COM = p.device
+
+    ser = serial.Serial(COM,115200)
+    if ser.isOpen():
+        print("command send")
+        ser.write(b'Broadcast:Rainbow')
+
+    time.sleep(20)
+    
+    if ser.isOpen():
+        print("command send")
+        ser.write(b'Broadcast:Play:Waterloo')
+    # ser.write(b'Broadcast:Rainbow')
     # test = ser.in_waiting()
     # print(test)
 

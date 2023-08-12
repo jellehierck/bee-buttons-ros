@@ -15,8 +15,8 @@ void painlessmesh_setup()
 
  
 
-    mesh.setDebugMsgTypes(
-        ERROR);
+    // mesh.setDebugMsgTypes(
+    //     ERROR);
 
     mesh.init(config.Mesh_SSID, config.Mesh_PASSWORD, config.Mesh_PORT, WIFI_AP_STA, config.Channel);
     mesh.setRoot(true);

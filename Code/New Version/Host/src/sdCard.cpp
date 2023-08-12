@@ -60,7 +60,9 @@ void Update_Firmware()
 
         ESP.restart();
     }
-    else{Serial.println("not found");}
+    else{
+        // Serial.println("not found");
+        }
     firmware.close();
 }
 
@@ -84,9 +86,9 @@ void READ_CONFIG(const char *filename, Config &config)
     strlcpy(config.Mesh_PASSWORD, doc["MESH_PASSWORD"], sizeof(config.Mesh_PASSWORD));
     strlcpy(config.Mesh_Name, doc["MESH_NAME"], sizeof(config.Mesh_Name));
 
-    Serial.println(config.Mesh_PORT);
+
     config.Channel = doc["WIFI_CHANNEL"];
-    config.Brightness = doc["BRIGHTNESS"];
+
 
     file.close();
     }
@@ -99,7 +101,7 @@ void READ_CONFIG(const char *filename, Config &config)
     strlcpy(config.Mesh_SSID, "test", sizeof(config.Mesh_SSID));
     strlcpy(config.Mesh_PASSWORD, "ditisniettekort", sizeof(config.Mesh_PASSWORD));
     strlcpy(config.Mesh_Name, "test", sizeof(config.Mesh_Name));
-    config.Brightness = 100;
+
 
     }
 }

@@ -10,15 +10,19 @@
 #include <ArduinoJson.h>
 Config config;
 
+// #include "USB.h"
+
+
 void testdrawtext(char *text, uint16_t color);
 // setup of all functions and button parts are called here
 void setup()
 {
 
   Serial.begin(115200);
+
   delay(2000);
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, LOW);
+  // pinMode(LED_BUILTIN, OUTPUT);
+  // digitalWrite(LED_BUILTIN, LOW);
 
   SDCARD_SETUP();
 

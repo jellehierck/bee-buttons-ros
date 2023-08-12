@@ -1,11 +1,19 @@
 #pragma once
 
 #include "general.h"
-#include <Adafruit_GFX.h>    // Core graphics library
-#include <Adafruit_ST7789.h> // Hardware-specific library for ST7789
-// #include <SPI.h>
+#include <Adafruit_GFX.h>  
 
-// Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
+#ifdef TDONGLE_S2
+
+#include <Adafruit_ST7789.h>
+
+#endif
+
+#ifdef TDONGLE_S3
+
+#include <Adafruit_ST7735.h>
+
+#endif
 
 void displaySetup();
 void DisplayNode(int nodeCount);
