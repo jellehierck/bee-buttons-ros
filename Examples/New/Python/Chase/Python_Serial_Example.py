@@ -60,5 +60,10 @@ while (True):
         # if(ser.read() > 0):
         message = ser.readline().decode('ascii').strip()
         print(message)
+        if message.startswith('nodeList/'):
+            message = message.replace('nodeList/','')
+            nodeList = message.split('/')
+            print(nodeList)
+
 
 
