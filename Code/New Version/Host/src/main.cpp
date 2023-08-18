@@ -53,12 +53,22 @@ void loop()
     if (nodeNumber == "Broadcast")
     {
       mesh.sendBroadcast(Command);
+      // Still have to upload code
+      // serial.print(Command)
+      // serial.println(" has been send")
     }
     else
     {
 
       uint32_t nodeNumberInt = (nodeNumber.substring(0, 9).toInt() * 10) + nodeNumber.substring(9).toInt();
       mesh.sendSingle(nodeNumberInt, Command);
+
+      // Still needs to be uploaded
+      // serial.print(Command)
+      // serial.print(" has been send to")
+      // serial.println(nodeNumberInt)
+
+
     }
   }
 }
