@@ -40,6 +40,7 @@ void mesh_commands(String msg)
         }
         else
         {
+            Serial.println(msg);
             // Clean received sub string
             String mode = msg;
             mode.remove(indexLastSplit);

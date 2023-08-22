@@ -51,7 +51,7 @@ void receivedCallback(uint32_t from, String &msg)
   if (msg == "Hello root node here")
   {
     hostNodeIdUint = from;
-    mesh.sendSingle(hostNodeIdUint, String("Node id: ") + String(mesh.getNodeId()));
+    // mesh.sendSingle(hostNodeIdUint, String("Node id: ") + String(mesh.getNodeId()));
     BlinkMode("Green");
   }
   // The function that has all interactions (LEDs and Sounds)
