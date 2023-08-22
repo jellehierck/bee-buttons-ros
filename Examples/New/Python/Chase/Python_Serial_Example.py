@@ -30,8 +30,8 @@ if __name__ == '__main__':
     ser = serial.Serial(COM,115200)
     if ser.isOpen():
         print("command send")
-        ser.write(b'Broadcast:Full:Purple\n')
-        ser.write(b'Nodelist\n')
+        ser.write(b'Broadcast:Full:Purple`')
+        ser.write(b'Nodelist`')
         # ser.write(b'')
 
     # time.sleep(20)
@@ -52,18 +52,19 @@ while (True):
                 message = message.replace('nodeList/','')
                 nodeList = message.split('/')
                 print(nodeList)
-                startBool = True
-                Chosen = random.randint(1,len(nodeList)-1)
-                print(Chosen)
-                ser.write(b'Broadcast:Full:Purple\n')
-                # time.sleep(1)
-                chosenMessage = nodeList[Chosen] + ':Full:Pink\n'
-                ser.write(chosenMessage.encode())
-                # time.sleep(1)
+                if len(nodeList) > 2:
+                    startBool = True
+                    Chosen = random.randint(1,len(nodeList)-1)
+                    print(Chosen)
+                    ser.write(b'Broadcast:Full:Purple`')
+                    # time.sleep(1)
+                    chosenMessage = nodeList[Chosen] + ':Full:Pink`'
+                    ser.write(chosenMessage.encode())
+                    # time.sleep(1)
 
-                ser.write(b'broadcast:Play:nothing\n')
-                # time.sleep(1)
-                ser.write(b'Broadcast:Volume:3\n')
+                    ser.write(b'Broadcast:Play:nothing`')
+                    # time.sleep(1)
+                    ser.write(b'Broadcast:Volume:3`')
 
             elif message == "This is the gateway":
                 print()
@@ -83,17 +84,17 @@ while (True):
                         winCounter += 1
 
                         if Win == winCounter:
-                            ser.write(b'Broadcast:Rainbow\n')
+                            ser.write(b'Broadcast:Rainbow`')
                             # time.sleep(1)
-                            ser.write(b'Broadcast:Play:waterloo\n')
+                            ser.write(b'Broadcast:Play:waterloo`')
+
                             # time.sleep(1)
                             print('You won')
                             winCounter = 0
 
                         else:
-                            ser.write(b'Broadcast:Full:Purple')
-                            # time.sleep(1)
-                            chosenMessage = nodeList[Chosen] + ':Full:Yellow\n'
+                            ser.write(b'Broadcast:Full:Purple`')
+                            chosenMessage = nodeList[Chosen] + ':Full:Yellow`'
                             ser.write(chosenMessage.encode())
                             # time.sleep(1)
 

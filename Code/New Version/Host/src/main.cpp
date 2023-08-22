@@ -40,24 +40,16 @@ void loop()
 {
 
   mesh_loop();
-  String message = Serial.readString();
+  String message = Serial.readStringUntil('`');
+  // Serial.readBytes
 
   if (message != "")
   {
     message.trim();
     // message  += " test";
     int nodeNumberindexEnd = message.indexOf(':');
-    Serial.println(message);
-    Serial.print("Index: ");
-    Serial.println(nodeNumberindexEnd);
     String nodeNumber = message.substring(0, nodeNumberindexEnd);
     String Command = message.substring(nodeNumberindexEnd);
-
-      Serial.print("nodeNumber; ");
-      Serial.println(nodeNumber);
-
-      Serial.print("comand; ");
-      Serial.println(Command);
 
     if (nodeNumber == "Broadcast")
     {
