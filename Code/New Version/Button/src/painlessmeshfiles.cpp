@@ -55,6 +55,9 @@ void receivedCallback(uint32_t from, String &msg)
     BlinkMode("Green");
   }
   // The function that has all interactions (LEDs and Sounds)
+  Serial.print("start-");
+  Serial.print(msg);
+  Serial.println("-end");
   mesh_commands(msg);
 
 }
@@ -107,4 +110,5 @@ void send_message_host(String message)
 {
 
   mesh.sendBroadcast(message);
+
 }
