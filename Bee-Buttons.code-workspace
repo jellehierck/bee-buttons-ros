@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "Host",
+			"path": "Code/New Version/Host"
+		},
+		{
+			"name": "test host dongle",
+			"path": "Code/test host dongle"
+		},
+		{
+			"name": "Old Version",
+			"path": "Code/Old Version"
+		}
+	],
+	"settings": {}
+}
