@@ -6,7 +6,7 @@ import serial.tools.list_ports
 import time
 
 
-
+# End command with ` 
 # Variable that stores the list of nodes
 nodeList = []
 startBool = False
