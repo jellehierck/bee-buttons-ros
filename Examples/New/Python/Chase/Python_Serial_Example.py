@@ -30,7 +30,9 @@ if __name__ == '__main__':
     ser = serial.Serial(COM,115200)
     if ser.isOpen():
         print("command send")
-        ser.write(b'Broadcast:Full:Purple')
+        ser.write(b'Broadcast:Full:Purple\n')
+        ser.write(b'Nodelist\n')
+        # ser.write(b'')
 
     # time.sleep(20)
     
@@ -45,7 +47,7 @@ while (True):
         
         if ser.isOpen():
             message = ser.readline().decode('ascii').strip()
-            print(message)
+            print("mesage from Dongle: " + message)
             if message.startswith('nodeList/'):
                 message = message.replace('nodeList/','')
                 nodeList = message.split('/')
@@ -53,49 +55,50 @@ while (True):
                 startBool = True
                 Chosen = random.randint(1,len(nodeList)-1)
                 print(Chosen)
-                ser.write(b'Broadcast:Full:Purple')
-                time.sleep(1)
-                chosenMessage = nodeList[Chosen] + 'Full:Yellow'
+                ser.write(b'Broadcast:Full:Purple\n')
+                # time.sleep(1)
+                chosenMessage = nodeList[Chosen] + ':Full:Pink\n'
                 ser.write(chosenMessage.encode())
-                time.sleep(1)
+                # time.sleep(1)
 
-                ser.write(b'broadcast:Play:nothing')
-                time.sleep(1)
-                ser.write(b'Broadcast:Volume:3')
+                ser.write(b'broadcast:Play:nothing\n')
+                # time.sleep(1)
+                ser.write(b'Broadcast:Volume:3\n')
 
             elif message == "This is the gateway":
                 print()
             else:
                 messageComponents = message.split(':')
-                node = messageComponents[0]
-                state = messageComponents[1]
-                print(node)
-                print(state)
+                if len(messageComponents) > 1:
+                    node = messageComponents[0]
+                    state = messageComponents[1]
+                    print(node)
+                    print(state)
 
-                if startBool and node == nodeList[Chosen] and state == 'Pressed':
-                    oldChosen = Chosen
-                    while Chosen == oldChosen:
-                        Chosen = random.randint(1,len(nodeList)-1)
-                    print(Chosen)
-                    winCounter += 1
+                    if startBool and node == nodeList[Chosen] and state == 'Pressed':
+                        oldChosen = Chosen
+                        while Chosen == oldChosen:
+                            Chosen = random.randint(1,len(nodeList)-1)
+                        print(Chosen)
+                        winCounter += 1
 
-                    if Win == winCounter:
-                        ser.write(b'Broadcast:Rainbow')
-                        time.sleep(1)
-                        ser.write(b'Broadcast:Play:waterloo')
-                        time.sleep(1)
-                        print('You won')
-                        winCounter = 0
+                        if Win == winCounter:
+                            ser.write(b'Broadcast:Rainbow\n')
+                            # time.sleep(1)
+                            ser.write(b'Broadcast:Play:waterloo\n')
+                            # time.sleep(1)
+                            print('You won')
+                            winCounter = 0
 
-                    else:
-                        ser.write(b'Broadcast:Full:Purple')
-                        time.sleep(1)
-                        chosenMessage = nodeList[Chosen] + 'Full:Yellow'
-                        ser.write(chosenMessage.encode())
-                        time.sleep(1)
+                        else:
+                            ser.write(b'Broadcast:Full:Purple')
+                            # time.sleep(1)
+                            chosenMessage = nodeList[Chosen] + ':Full:Yellow\n'
+                            ser.write(chosenMessage.encode())
+                            # time.sleep(1)
 
 
-                        print('wincounter: ' + str(winCounter))
+                            print('wincounter: ' + str(winCounter))
 
 
                 

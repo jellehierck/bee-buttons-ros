@@ -43,7 +43,7 @@ void mesh_loop()
 // This function is called when there is a change in connection
 void changedConnectionsCallback(uint32_t nodeId)
 {
-    Serial.println(String("newNode:") + nodeId);
+    // Serial.println(String("newNode:") + nodeId);
     mesh.sendSingle(nodeId, "Hello root node here");
     auto nodes = mesh.getNodeList(true);
             String str = "nodeList";

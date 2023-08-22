@@ -47,15 +47,39 @@ void loop()
     message.trim();
     // message  += " test";
     int nodeNumberindexEnd = message.indexOf(':');
-
+    Serial.println(message);
+    Serial.print("Index: ");
+    Serial.println(nodeNumberindexEnd);
     String nodeNumber = message.substring(0, nodeNumberindexEnd);
     String Command = message.substring(nodeNumberindexEnd);
+
+      Serial.print("nodeNumber; ");
+      Serial.println(nodeNumber);
+
+      Serial.print("comand; ");
+      Serial.println(Command);
+
     if (nodeNumber == "Broadcast")
     {
       mesh.sendBroadcast(Command);
+
       // Still have to upload code
       // serial.print(Command)
       // serial.println(" has been send")
+    }
+    else if(nodeNumber == "Nodelist")
+    {
+      auto nodes = mesh.getNodeList(true);
+            String str = "nodeList";
+            int nodeCount = -1;
+            for (auto &&id : nodes){
+                str += String("/") + String(id);
+                nodeCount =nodeCount+ 1;
+                }
+
+    Serial.println(str);
+
+
     }
     else
     {
