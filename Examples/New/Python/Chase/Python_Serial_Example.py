@@ -1,12 +1,11 @@
 import random
 import serial
-import sys
-import glob
 import serial.tools.list_ports
-import time
+
 
 
 # End command with ` 
+
 # Variable that stores the list of nodes
 nodeList = []
 startBool = False
@@ -19,6 +18,17 @@ winCounter = 0
 Win = 3
 Chosen = 0
 
+def broadcastCommand(Command):
+    Command = "Broadcast:" + Command + '`'
+    ser.write(Command.encode())
+
+def commandToNode(nodeID, Command):
+    msg = nodeID + ":" + Command + '`'
+    ser.write(msg.encode())
+
+def refreshNodelist():
+    ser.write(b'Nodelist`')
+
 
 if __name__ == '__main__':
 
@@ -30,18 +40,11 @@ if __name__ == '__main__':
     ser = serial.Serial(COM,115200)
     if ser.isOpen():
         print("command send")
-        ser.write(b'Broadcast:Full:Purple`')
-        ser.write(b'Nodelist`')
-        # ser.write(b'')
+        # ser.write(b'Broadcast:Full:Purple`')
+        # ser.write(b'Nodelist`')
+        broadcastCommand("Full:Purple")
+        refreshNodelist()
 
-    # time.sleep(20)
-    
-    
-
-        # ser.write(b'Broadcast:Play:Waterloo')
-    # ser.write(b'Broadcast:Rainbow')
-    # test = ser.in_waiting()
-    # print(test)
 
 while (True):
         
@@ -52,19 +55,20 @@ while (True):
                 message = message.replace('nodeList/','')
                 nodeList = message.split('/')
                 print(nodeList)
-                if len(nodeList) > 2:
-                    startBool = True
-                    Chosen = random.randint(1,len(nodeList)-1)
-                    print(Chosen)
-                    ser.write(b'Broadcast:Full:Purple`')
-                    # time.sleep(1)
-                    chosenMessage = nodeList[Chosen] + ':Full:Pink`'
-                    ser.write(chosenMessage.encode())
-                    # time.sleep(1)
+                # if len(nodeList) > 2:
 
-                    ser.write(b'Broadcast:Play:nothing`')
-                    # time.sleep(1)
-                    ser.write(b'Broadcast:Volume:3`')
+                #     Chosen = 1
+                #     print(Chosen)
+                #     # ser.write(b'Broadcast:Blink:Purple`')
+                #     broadcastCommand("Blink:Cyan")
+
+                #     # chosenMessage = nodeList[Chosen] + ':Blink:Pink`'
+                #     # ser.write(chosenMessage.encode())
+
+                #     commandToNode(nodeList[Chosen], "Blink:Pink")
+                #     ser.write(b'Broadcast:Play:nothing`')
+
+                #     ser.write(b'Broadcast:Volume:3`')
 
             elif message == "This is the gateway":
                 print()
@@ -84,22 +88,47 @@ while (True):
                         winCounter += 1
 
                         if Win == winCounter:
-                            ser.write(b'Broadcast:Rainbow`')
-                            # time.sleep(1)
-                            ser.write(b'Broadcast:Play:waterloo`')
+                            broadcastCommand("Rainbow")
+                            broadcastCommand("Play:Survivor")
+                            # ser.write(b'Broadcast:Rainbow`')
 
-                            # time.sleep(1)
+                            # ser.write(b'Broadcast:Play:Survivor`')
+
+
                             print('You won')
                             winCounter = 0
 
                         else:
-                            ser.write(b'Broadcast:Full:Purple`')
-                            chosenMessage = nodeList[Chosen] + ':Full:Yellow`'
-                            ser.write(chosenMessage.encode())
-                            # time.sleep(1)
+                            broadcastCommand("Full:Purple")
+                            commandToNode(nodeList[Chosen], "Full:Yellow")
+                            # ser.write(b'Broadcast:Full:Purple`')
+                            # chosenMessage = nodeList[Chosen] + ':Full:Yellow`'
+                            # ser.write(chosenMessage.encode())
+
 
 
                             print('wincounter: ' + str(winCounter))
+
+                    if (startBool == False) and (state == 'Double Pressed'):
+                        startBool = True
+                        Chosen = random.randint(1,len(nodeList)-1)
+                        # ser.write(b'Broadcast:Full:Purple`')
+                        broadcastCommand("Full:Purple")
+                        commandToNode(nodeList[Chosen], "Full:Yellow")
+                        print(nodeList[Chosen])
+                        # chosenMessage = nodeList[Chosen] + ':Full:Yellow`'
+                        # ser.write(chosenMessage.encode())
+                        print("Game started")
+
+                    if (state == "Long Press"):
+                        startBool = False
+                        refreshNodelist()
+                        broadcastCommand("Play:nothing")
+                        broadcastCommand("Volume:3")
+                        # ser.write(b'Nodelist`')
+                        # ser.write(b'Broadcast:Play:nothing`')
+                        # ser.write(b'Broadcast:Volume:3`')
+
 
 
                 

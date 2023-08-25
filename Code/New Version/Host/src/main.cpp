@@ -70,6 +70,7 @@ void loop()
                 }
 
     Serial.println(str);
+    DisplayNode(nodeCount);
 
 
     }
