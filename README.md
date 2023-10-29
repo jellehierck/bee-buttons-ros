@@ -41,7 +41,7 @@ An command can be 'Broadcast:Full:Purple`', this will turn all connected buttons
 
 ### nodelist
 
-To get a list off all nodes connected to the dongle you can send the command 'nodelist`'. This will return a string that start with ''nodeList' followed by all the nodes seperated by a '/'. For example 'nodeList/498425705/3171683153'
+To get a list off all nodes connected to the dongle you can send the command 'nodelist`'. This will return a string that start with ''nodeList' followed by all the nodes seperated by a '/'. For example 'nodeList/498425705/3171683153' The first id is from the dongle itself and can be ignored. This this list contains only the button with id 3171683153.
 
 ### Colors
 
