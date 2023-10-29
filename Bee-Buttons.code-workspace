@@ -6,18 +6,6 @@
 		{
 			"name": "Host",
 			"path": "Code/New Version/Host"
-		},
-		{
-			"name": "test host dongle",
-			"path": "Code/test host dongle"
-		},
-		{
-			"name": "Old Version",
-			"path": "Code/Old Version"
-		},
-		{
-			"name": "Button",
-			"path": "Code/New Version/Button"
 		}
 	],
 	"settings": {}

@@ -3,25 +3,25 @@
 #include "SPI.h"
 #include "USB.h"
 #include "USBMSC.h"
-#ifdef TDONGLE_S2
+// #ifdef TDONGLE_S2
 
-// sd card pins
-#define SD_CS 10
-#define SPI_MOSI 11 // SD Card
-#define SPI_MISO 13
-#define SPI_SCK 12
+// // sd card pins
+// #define SD_CS 10
+// #define SPI_MOSI 11 // SD Card
+// #define SPI_MISO 13
+// #define SPI_SCK 12
 
-// display pins
-#define TFT_WIDTH  135
-#define TFT_HEIGHT 240
-#define TFT_CS 34
-#define TFT_MISO -1
-#define TFT_MOSI 35
-#define TFT_DC 37
-#define TFT_RST 38
-#define TFT_SCLK 36
-#define TFT_BL 33
-#endif
+// // display pins
+// #define TFT_WIDTH  135
+// #define TFT_HEIGHT 240
+// #define TFT_CS 34
+// #define TFT_MISO -1
+// #define TFT_MOSI 35
+// #define TFT_DC 37
+// #define TFT_RST 38
+// #define TFT_SCLK 36
+// #define TFT_BL 33
+// #endif
 
 #ifdef TDONGLE_S3
 
