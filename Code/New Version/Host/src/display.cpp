@@ -34,7 +34,7 @@ void displaySetup()
         pinMode(TFT_BL, OUTPUT);
         digitalWrite(TFT_BL, LOW);
 
-        tft.setRotation(1);
+        tft.setRotation(3);
 
        
     #endif

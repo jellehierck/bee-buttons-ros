@@ -15,7 +15,7 @@ startBool = False
 
 # variables for the game
 winCounter = 0
-Win = 3
+Win = 8
 Chosen = 0
 
 def broadcastCommand(Command):

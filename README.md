@@ -24,7 +24,7 @@ On the SD card, there are a few things.
 
 ### config.txt
 
-The config file is meant to quickly change some things without needing to edit the code. Some values are only applicable to the gateway (WIFI_SSID, WIFI_PASSWORD, MQTT_IP, MQTT_PORT). The rest is used by every node.
+The config file is meant to quickly change some things without needing to edit the code.
 
 - **MESH_SSID**: This is the name of the mesh, which has to match among the buttons u use, otherwise, they cannot find each other. U can also see this with ur phone/computer, but u cannot connect to it without a special app.
 - **MESH_PASSWORD**: This is the password your network will use between the buttons, so not ur laptop. This also has to match between the buttons.
