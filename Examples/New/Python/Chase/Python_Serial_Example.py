@@ -31,7 +31,6 @@ def refreshNodelist():
 
 
 if __name__ == '__main__':
-
     ports = list(serial.tools.list_ports.comports())
     for p in ports:
         if "USB Serial Device" in p.description:
@@ -40,8 +39,7 @@ if __name__ == '__main__':
     ser = serial.Serial(COM,115200)
     if ser.isOpen():
         print("command send")
-        # ser.write(b'Broadcast:Full:Purple`')
-        # ser.write(b'Nodelist`')
+
         broadcastCommand("Full:Purple")
         refreshNodelist()
 
@@ -55,20 +53,7 @@ while (True):
                 message = message.replace('nodeList/','')
                 nodeList = message.split('/')
                 print(nodeList)
-                # if len(nodeList) > 2:
 
-                #     Chosen = 1
-                #     print(Chosen)
-                #     # ser.write(b'Broadcast:Blink:Purple`')
-                #     broadcastCommand("Blink:Cyan")
-
-                #     # chosenMessage = nodeList[Chosen] + ':Blink:Pink`'
-                #     # ser.write(chosenMessage.encode())
-
-                #     commandToNode(nodeList[Chosen], "Blink:Pink")
-                #     ser.write(b'Broadcast:Play:nothing`')
-
-                #     ser.write(b'Broadcast:Volume:3`')
 
             elif message == "This is the gateway":
                 print()
@@ -89,10 +74,8 @@ while (True):
 
                         if Win == winCounter:
                             broadcastCommand("Rainbow")
-                            broadcastCommand("Play:Survivor")
-                            # ser.write(b'Broadcast:Rainbow`')
+                            broadcastCommand("Play:Money")
 
-                            # ser.write(b'Broadcast:Play:Survivor`')
 
 
                             print('You won')
@@ -101,9 +84,7 @@ while (True):
                         else:
                             broadcastCommand("Full:Purple")
                             commandToNode(nodeList[Chosen], "Full:Yellow")
-                            # ser.write(b'Broadcast:Full:Purple`')
-                            # chosenMessage = nodeList[Chosen] + ':Full:Yellow`'
-                            # ser.write(chosenMessage.encode())
+
 
 
 
@@ -112,12 +93,10 @@ while (True):
                     if (startBool == False) and (state == 'Double Pressed'):
                         startBool = True
                         Chosen = random.randint(1,len(nodeList)-1)
-                        # ser.write(b'Broadcast:Full:Purple`')
                         broadcastCommand("Full:Purple")
                         commandToNode(nodeList[Chosen], "Full:Yellow")
                         print(nodeList[Chosen])
-                        # chosenMessage = nodeList[Chosen] + ':Full:Yellow`'
-                        # ser.write(chosenMessage.encode())
+
                         print("Game started")
 
                     if (state == "Long Press"):
@@ -125,9 +104,7 @@ while (True):
                         refreshNodelist()
                         broadcastCommand("Play:nothing")
                         broadcastCommand("Volume:3")
-                        # ser.write(b'Nodelist`')
-                        # ser.write(b'Broadcast:Play:nothing`')
-                        # ser.write(b'Broadcast:Volume:3`')
+
 
 
 
