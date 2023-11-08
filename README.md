@@ -29,7 +29,6 @@ The config file is meant to quickly change some things without needing to edit t
 - **MESH_SSID**: This is the name of the mesh, which has to match among the buttons u use, otherwise, they cannot find each other. U can also see this with ur phone/computer, but u cannot connect to it without a special app.
 - **MESH_PASSWORD**: This is the password your network will use between the buttons, so not ur laptop. This also has to match between the buttons.
 - **MESH_PORT**: This is the port where they communicate and also has to match. U can have multiple networks match on the MESH_SSID and MESH_PASWORD, but change the port. They won't be able to communicate with each other that way.
-- **MESH_NAME**: This is what determines on what topic the messages are published on MQTT.
 - **Volume**: This is the volume level the button start with. The scale is 1-21, can be handy to change this on startup. It can also be changed later with MQTT commands, but it won't be remembered between startups.
 - **BRIGHTNESS**: The brightness value the LEDs start with, the value is in a range between 0 and 255. Just as with the volume, u can change this with a command but it will not be remembered between reboots.
 
