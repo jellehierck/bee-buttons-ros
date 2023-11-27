@@ -38,7 +38,12 @@ if __name__ == '__main__':
 
     ser = serial.Serial(COM,115200)
     if ser.isOpen():
-        print("command send")
+        print("===========================================================================")
+        print("To start the game double press a button.")
+        print("To make sure all buttons are connected, long press a button.")
+        print("The screen will show how many buttons are connected.")
+        print("All purple buttons are connected.")
+        print("===========================================================================")
 
         broadcastCommand("Full:Purple")
         refreshNodelist()
@@ -79,6 +84,8 @@ while (True):
 
 
                             print('You won')
+                            print("To reset long press")
+                            print("To start new game double press after reset")
                             winCounter = 0
 
                         else:
@@ -102,6 +109,7 @@ while (True):
                     if (state == "Long Press"):
                         startBool = False
                         refreshNodelist()
+                        broadcastCommand("Full:Purple")
                         broadcastCommand("Play:nothing")
                         broadcastCommand("Volume:3")
 
