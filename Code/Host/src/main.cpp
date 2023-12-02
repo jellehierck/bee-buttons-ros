@@ -8,84 +8,84 @@
 #include "display.h"
 #include "sdCard.h"
 #include <ArduinoJson.h>
-Config config;
+// #include "OneButton.h"
+#include "button.h"
 
+Config config;
+int nodeCount = 0;
 // #include "USB.h"
 
-
-void testdrawtext(char *text, uint16_t color);
+// void testdrawtext(char *text, uint16_t color);
 // setup of all functions and button parts are called here
 void setup()
 {
 
   Serial.begin(115200);
-  setCpuFrequencyMhz(80);
+  button_setup();
+  setCpuFrequencyMhz(240);
   delay(2000);
-  // pinMode(LED_BUILTIN, OUTPUT);
-  // digitalWrite(LED_BUILTIN, LOW);
+
 
   SDCARD_SETUP();
 
-  // leds_setup();
+
   delay(1000);
   Update_Firmware();
   displaySetup();
 
   painlessmesh_setup();
   Serial.println("This is the gateway");
+  pinMode(0, INPUT);
+
+
+
 }
 
 // all functions that need be kept running are put here
 void loop()
 {
-
+  button_loop();
   mesh_loop();
-  String message = Serial.readStringUntil('`');
-  // Serial.readBytes
 
-  if (message != "")
+// Checks if there was a message on serial
+  if (Serial.available())
   {
-    message.trim();
-    // message  += " test";
-    int nodeNumberindexEnd = message.indexOf(':');
-    String nodeNumber = message.substring(0, nodeNumberindexEnd);
-    String Command = message.substring(nodeNumberindexEnd);
+    String message = Serial.readStringUntil('`');
 
-    if (nodeNumber == "Broadcast")
+    if (message != "")
     {
-      mesh.sendBroadcast(Command);
+      message.trim();
+      
+// parses the message received over Serial
+      int nodeNumberindexEnd = message.indexOf(':');
+      String nodeNumber = message.substring(0, nodeNumberindexEnd);
+      String Command = message.substring(nodeNumberindexEnd);
 
-      // Still have to upload code
-      // serial.print(Command)
-      // serial.println(" has been send")
-    }
-    else if(nodeNumber == "Nodelist")
-    {
-      auto nodes = mesh.getNodeList(true);
-            String str = "nodeList";
-            int nodeCount = -1;
-            for (auto &&id : nodes){
-                str += String("/") + String(id);
-                nodeCount =nodeCount+ 1;
-                }
+// checks if the message has to go to every node on the network, a specific button or if the nodeList has to be send back
+      if (nodeNumber == "Broadcast")
+      {
+        mesh.sendBroadcast(Command);
+      }
+      else if (nodeNumber == "Nodelist")
+      {
+        auto nodes = mesh.getNodeList(true);
+        String str = "nodeList";
+        nodeCount = -1;
+        for (auto &&id : nodes)
+        {
+          str += String("/") + String(id);
+          nodeCount = nodeCount + 1;
+        }
 
-    Serial.println(str);
-    DisplayNode(nodeCount);
+        Serial.println(str);
+        DisplayNode(nodeCount);
+      }
+      else
+      {
 
-
-    }
-    else
-    {
-
-      uint32_t nodeNumberInt = (nodeNumber.substring(0, 9).toInt() * 10) + nodeNumber.substring(9).toInt();
-      mesh.sendSingle(nodeNumberInt, Command);
-
-      // Still needs to be uploaded
-      // serial.print(Command)
-      // serial.print(" has been send to")
-      // serial.println(nodeNumberInt)
-
-
+        uint32_t nodeNumberInt = (nodeNumber.substring(0, 9).toInt() * 10) + nodeNumber.substring(9).toInt();
+        mesh.sendSingle(nodeNumberInt, Command);
+      }
     }
   }
 }

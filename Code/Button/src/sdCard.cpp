@@ -82,7 +82,6 @@ void READ_CONFIG(const char *filename, Config &config)
     config.Mesh_PORT = doc["MESH_PORT"];
     strlcpy(config.Mesh_SSID, doc["MESH_SSID"], sizeof(config.Mesh_SSID));
     strlcpy(config.Mesh_PASSWORD, doc["MESH_PASSWORD"], sizeof(config.Mesh_PASSWORD));
-    strlcpy(config.Mesh_Name, doc["MESH_NAME"], sizeof(config.Mesh_Name));
     config.Channel = doc["WIFI_CHANNEL"];
     config.Brightness = doc["BRIGHTNESS"];
     config.Volume = doc["VOLUME"];
@@ -96,7 +95,7 @@ void READ_CONFIG(const char *filename, Config &config)
     config.Mesh_PORT = 1111;
     strlcpy(config.Mesh_SSID, "test", sizeof(config.Mesh_SSID));
     strlcpy(config.Mesh_PASSWORD, "ditisniettekort", sizeof(config.Mesh_PASSWORD));
-    strlcpy(config.Mesh_Name, "test", sizeof(config.Mesh_Name));
+
 
     config.Channel = 6;
 

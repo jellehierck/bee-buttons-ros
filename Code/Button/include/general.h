@@ -19,8 +19,7 @@
 #define DATA_PIN 13
 
 #define BAT_PIN A2 
-// #define minBat = 3.3;
-// #define maxBat = 4.2;
+
 
 struct Config
 {
@@ -30,7 +29,7 @@ struct Config
     int Channel;
     int Brightness;
     int Volume;
-    char Mesh_Name[64];
+
 };
 
 extern Config config;

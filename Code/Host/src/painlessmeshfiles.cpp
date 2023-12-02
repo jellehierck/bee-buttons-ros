@@ -47,7 +47,7 @@ void changedConnectionsCallback(uint32_t nodeId)
     mesh.sendSingle(nodeId, "Hello root node here");
     auto nodes = mesh.getNodeList(true);
             String str = "nodeList";
-            int nodeCount = -1;
+            nodeCount = -1;
             for (auto &&id : nodes){
                 str += String("/") + String(id);
                 nodeCount =nodeCount+ 1;

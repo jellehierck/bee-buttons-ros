@@ -32,7 +32,7 @@ void setup()
   // only lets the code run when the battery is full enough
   if (BatteryPercentage() > 2)
   {
-    // checks if a button is a gateway or just a normal button.
+
 
     painlessmesh_setup();
     Serial.println("this is not the gateway!");

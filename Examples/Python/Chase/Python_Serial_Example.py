@@ -72,6 +72,7 @@ while (True):
 
                     if startBool and node == nodeList[Chosen] and state == 'Pressed':
                         oldChosen = Chosen
+                        commandToNode(nodeList[Chosen], "Play:Correct")
                         while Chosen == oldChosen:
                             Chosen = random.randint(1,len(nodeList)-1)
                         print(Chosen)
@@ -79,7 +80,7 @@ while (True):
 
                         if Win == winCounter:
                             broadcastCommand("Rainbow")
-                            broadcastCommand("Play:Money")
+                            broadcastCommand("Play:Win")
 
 
 
@@ -95,7 +96,13 @@ while (True):
 
 
 
+
                             print('wincounter: ' + str(winCounter))
+
+
+                    elif startBool and node != nodeList[Chosen] and state == 'Pressed':
+                        commandToNode(node, "Play:Wrong")
+
 
                     if (startBool == False) and (state == 'Double Pressed'):
                         startBool = True

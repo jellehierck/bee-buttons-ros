@@ -1,7 +1,7 @@
 # Bee Button
 
 These are the bee buttons, these buttons can be controlled with the use of MQTT.
-They send u if they have been pressed, double pressed or long pressed. And in turn, U can tell them to do light effects or play music. You controll the buttons via serial commandos, which every programming language supports. All files related to the project can be found on [Github](https://github.com/utwente-interaction-lab/Bee-Buttons). If u have any questions please mail to m.c.pijnappel@student.utwente.nl
+They send u if they have been pressed, double pressed or long pressed. And in turn, U can tell them to do light effects or play music. You controll the buttons via serial commandos, which every programming language supports. All files related to the project can be found on [project files](https://github.com/utwente-interaction-lab/Bee-Buttons). A more detailed guide can be found at [guide](https://github.com/utwente-interaction-lab/Interaction-buttons). If u have any questions please mail to m.c.pijnappel@student.utwente.nl.
 
 ### Mesh Dongle
 
@@ -36,7 +36,7 @@ The config file is meant to quickly change some things without needing to edit t
 
 These are all the commands that are available for the buttons with the use of serial commands. You start with either a nodeid which you can request with a command, or with 'Broadcast'. This can be used to send a commando to all nodes or to a specific node. After this you send ':' and the commando you want to send. Between each command layer you also put a ':'. At the end of command you have to put a '`' to indicate the command is done.
 
-An command can be 'Broadcast:Full:Purple`', this will turn all connected buttons purple. To test command you can use the serial monitor from for example the arduino IDE.
+A command can be 'Broadcast:Full:Purple`', this will turn all connected buttons purple. To test command you can use the serial monitor from for example the arduino IDE.
 
 ### nodelist
 
