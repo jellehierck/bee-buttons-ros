@@ -17,8 +17,6 @@ class BeeButtonsNode(Node):
     DEFAULT_BAUD_RATE = 115200
     DONGLE_DEVICE_NAME = "USB JTAG/serial debug unit"
 
-    BROADCAST_COMMAND = "Broadcast"
-
     COMMAND_SEPARATOR = ":"
     COMMAND_END = "`"
 
@@ -54,6 +52,9 @@ class BeeButtonsNode(Node):
         # Create publishers
         self.button_press_publisher = self.create_publisher(
             bee_buttons_interfaces.msg.BeeButtonPress, "button_press", rclpy.qos.qos_profile_system_default
+        )
+        self.button_battery_info_publisher = self.create_publisher(
+            bee_buttons_interfaces.msg.BeeButtonBatteryInfo, "button_battery_info", rclpy.qos.qos_profile_system_default
         )
 
         # Start timer to poll the serial port
@@ -120,7 +121,22 @@ class BeeButtonsNode(Node):
             self.button_press_publisher.publish(button_press_ros_msg)
 
         elif button_message_contents.startswith("Battery Percentage"):
-            pass  # TODO: Add battery information publisher
+            # Remove all descriptions from the string to leave only the numbers
+            button_message_contents = button_message_contents.replace("Battery Percentage:", "", 1)
+            button_message_contents = button_message_contents.replace("Battery Voltage:", "", 1)
+            button_message_contents = button_message_contents.replace("leds on:", "", 1)
+
+            # Split the message (which automatically handles multiple spaces in a row)
+            battery_values_split = button_message_contents.split()
+
+            battery_info_ros_msg = bee_buttons_interfaces.msg.BeeButtonBatteryInfo(
+                header=header,
+                node_id=node_id,
+                battery_percentage=int(battery_values_split[0]),
+                battery_voltage=float(battery_values_split[1]),
+                battery_indicator_leds_on=int(battery_values_split[2]),
+            )
+            self.button_battery_info_publisher.publish(battery_info_ros_msg)
 
         else:
             self.get_logger().warn(
@@ -133,7 +149,7 @@ class BeeButtonsNode(Node):
         self.serial_socket.write(command.encode())
 
     def command_broadcast(self, command: str) -> None:
-        command = f"{self.BROADCAST_COMMAND}{self.COMMAND_SEPARATOR}{command}{self.COMMAND_END}"
+        command = f"Broadcast{self.COMMAND_SEPARATOR}{command}{self.COMMAND_END}"
         self.get_logger().info(f'Sending command: "{command}" to all nodes')
         self.serial_socket.write(command.encode())
 
