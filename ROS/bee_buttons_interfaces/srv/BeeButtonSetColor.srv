@@ -1,0 +1,31 @@
+### Button selection ###
+# When set, this will broadcast to all buttons and ignore the node IDs
+bool broadcast false
+
+# Node IDs of the buttons to publish to.
+string[] node_ids
+
+### Color effects ###
+
+# Color effects to choose from
+string EFFECT_CLEAR = "Clear"  # Turn off any colors on the button (setting color field has no effect)
+string EFFECT_RAINBOW = "Rainbow"  # Put a rainbow effect on the button (setting color field has no effect)
+string EFFECT_FULL = "Full"  # Put a solid color on the button
+string EFFECT_CIRCLE = "Circle"  # Put a circle color effect on the button
+string EFFECT_BLINK = "Blink" # Put a blinking color effect on the button
+
+# Which color effect is chosen
+string effect
+
+# Which color will be applied to the effect
+BeeButtonColor color
+
+### Brightness ###
+# Special value which will maintain the current brightness
+int16 BRIGHTNESS_MAINTAIN = -1
+# Set the brightness of the button LEDs on a scale from 0-255, or -1 to not change the brightness
+int16 brightness -1
+
+---
+
+# No response is given

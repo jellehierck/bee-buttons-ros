@@ -9,6 +9,7 @@ import rclpy.qos
 import std_msgs.msg
 
 import bee_buttons_interfaces.msg
+import bee_buttons_interfaces.srv
 
 from .periodic_serial_line_reader import PeriodicSerialLineReader
 
@@ -42,6 +43,20 @@ class BeeButtonsNode(Node):
 
     COMMAND_SEPARATOR = ":"
     COMMAND_END = "`"
+
+    COMMAND_BATTERY_SHOW = f"Battery{COMMAND_SEPARATOR}Show"
+
+    COMMAND_CLEAR = "Clear"
+    COMMAND_RAINBOW = "Rainbow"
+    COMMAND_FULL = "Full"
+    COMMAND_CIRCLE = "Circle"
+    COMMAND_BLINK = "Blink"
+
+    COMMAND_BRIGHTNESS = "Brightness"
+    MIN_BRIGHTNESS = 0
+    MAX_BRIGHTNESS = 255
+
+    COMMAND_VALID_COLORS = ["Red", "Blue", "Green", "Purple", "Yellow", "Orange", "Cyan", "Pink"]
 
     def __init__(self) -> None:
         """
@@ -87,19 +102,33 @@ class BeeButtonsNode(Node):
 
         # Create publishers
         self.button_press_publisher = self.create_publisher(
-            bee_buttons_interfaces.msg.BeeButtonPress, "button_press", rclpy.qos.qos_profile_system_default
+            bee_buttons_interfaces.msg.BeeButtonPress,
+            "button_press",
+            rclpy.qos.qos_profile_system_default,
         )
         self.button_battery_info_publisher = self.create_publisher(
-            bee_buttons_interfaces.msg.BeeButtonBatteryInfo, "button_battery_info", rclpy.qos.qos_profile_system_default
+            bee_buttons_interfaces.msg.BeeButtonBatteryInfo,
+            "button_battery_info",
+            rclpy.qos.qos_profile_system_default,
+        )
+
+        # Create services
+        self.set_button_color_service = self.create_service(
+            bee_buttons_interfaces.srv.BeeButtonSetColor,
+            "~/set_button_color",  # Prepend the node name using `~`
+            self.set_color_service,
         )
 
         # Start timer to poll the serial port
         update_rate_hz = self.get_parameter(update_rate_param.name).get_parameter_value().double_value
-        self.timer = self.create_timer(1 / update_rate_hz, self.poll_buttons)
+        self.update_timer = self.create_timer(
+            1 / update_rate_hz,
+            self.poll_buttons,
+        )
 
         # If specified, all buttons are requested to send their battery information when the node starts
         if self.get_parameter(battery_info_on_startup_param.name).get_parameter_value().bool_value:
-            self.command_broadcast("Battery:Show")
+            self.command_broadcast(self.COMMAND_BATTERY_SHOW)
 
     @classmethod
     def open_serial_to_dongle(cls, baudrate: int = DEFAULT_BAUD_RATE) -> serial.Serial:
@@ -204,6 +233,83 @@ class BeeButtonsNode(Node):
             self.get_logger().warn(
                 f'Cannot handle button message contents: "{button_message_contents}" (from node {node_id})'
             )
+
+    def set_color_service(
+        self,
+        request: bee_buttons_interfaces.srv.BeeButtonSetColor.Request,
+        response: bee_buttons_interfaces.srv.BeeButtonSetColor.Response,
+    ) -> bee_buttons_interfaces.srv.BeeButtonSetColor.Response:
+        """
+        Callback for the service to set button colors.
+
+        See `bee_buttons_interfaces/srv/BeeButtonSetColor.srv` for detailed information.
+
+        :param request: Service request object.
+        :param response: Service response object.
+        :return: The service response
+        """
+        # Determine which effect is set
+        if request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_CLEAR:
+            effect_command = self.COMMAND_CLEAR
+
+        elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_RAINBOW:
+            effect_command = self.COMMAND_RAINBOW
+
+        elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_FULL:
+            # TODO: Move check for valid color into separate function to keep DRY
+            if not self.is_valid_color(request.color):
+                self.get_logger().error(f"Received unknown color {request.color}")
+                return response
+            effect_command = f"{self.COMMAND_FULL}{self.COMMAND_SEPARATOR}{request.color}"
+
+        elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_CIRCLE:
+            if not self.is_valid_color(request.color):
+                self.get_logger().error(f"Received unknown color {request.color}")
+                return response
+            effect_command = f"{self.COMMAND_CIRCLE}{self.COMMAND_SEPARATOR}{request.color}"
+
+        elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_BLINK:
+            if not self.is_valid_color(request.color):
+                self.get_logger().error(f"Received unknown color {request.color}")
+                return response
+            effect_command = f"{self.COMMAND_BLINK}{self.COMMAND_SEPARATOR}{request.color}"
+
+        else:
+            # Unknown effect, print a warning but do nothing
+            self.get_logger().error(f"Received unknown color effect {request.effect}")
+            return response
+
+        # Check if the command should be broadcasted or sent to specific node(s)
+        if request.broadcast:
+            self.command_broadcast(command=effect_command)
+        else:
+            for node_id in request.node_ids:
+                self.command_specific_button(node_id=node_id, command=effect_command)
+
+        # Also set the brightness
+        # TODO: split into separate function?
+        if request.brightness != bee_buttons_interfaces.srv.BeeButtonSetColor.Request.BRIGHTNESS_MAINTAIN:
+            if request.brightness < self.MIN_BRIGHTNESS or request.brightness > self.MAX_BRIGHTNESS:
+                self.get_logger().error(
+                    f"Cannot set brightness to {request.brightness}, must be in range {self.MIN_BRIGHTNESS}-{self.MAX_BRIGHTNESS}"
+                )
+                return response
+            brightness_command = f"{self.COMMAND_BRIGHTNESS}{self.COMMAND_SEPARATOR}{request.brightness}"
+
+            # TODO: Move to function call?
+            if request.broadcast:
+                self.command_broadcast(command=brightness_command)
+            else:
+                for node_id in request.node_ids:
+                    self.command_specific_button(node_id=node_id, command=brightness_command)
+
+        # Return the service response, which is empty but still required
+        return response
+
+    @classmethod
+    def is_valid_color(cls, color: str) -> bool:
+        """Whether a color string is part of the valid colors to set for a button."""
+        return color in cls.COMMAND_VALID_COLORS
 
     def command_specific_button(self, node_id: str, command: str) -> None:
         """

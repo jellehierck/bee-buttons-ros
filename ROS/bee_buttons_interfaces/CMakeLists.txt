@@ -15,8 +15,10 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   # Messages
   "msg/BeeButtonPress.msg"
   "msg/BeeButtonBatteryInfo.msg"
+  "msg/BeeButtonColor.msg"
 
   # Services
+  "srv/BeeButtonSetColor.srv"
 
   # Actions
 
