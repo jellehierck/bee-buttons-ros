@@ -2,6 +2,12 @@
 
 A ROS 2 interface for the Bee Buttons.
 
+## TODOs
+
+- Node currently crashes whenever a button connects to / disconnects from the dongle.
+- Add service call for battery information.
+- (low priority) add service call for playing sound effects.
+
 ## Installation
 
 ### Preparing the workspace
