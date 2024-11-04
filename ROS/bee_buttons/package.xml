@@ -13,6 +13,9 @@
 
   <!-- Third-party ROS dependencies -->
 
+  <!-- Other ROS dependencies from this project -->
+  <depend>bee_buttons_interfaces</depend>
+
   <!-- Pure python dependencies -->
   <exec_depend>python3-serial</exec_depend>
 

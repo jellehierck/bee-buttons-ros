@@ -3,9 +3,12 @@ import serial.tools.list_ports
 
 import rclpy
 from rclpy.node import Node
-
 from rcl_interfaces.msg import ParameterDescriptor, FloatingPointRange
+
+import rclpy.qos
 import std_msgs.msg
+
+import bee_buttons_interfaces.msg
 
 from .periodic_serial_line_reader import PeriodicSerialLineReader
 
@@ -42,14 +45,16 @@ class BeeButtonsNode(Node):
         try:
             self.serial_socket = self.open_serial_to_dongle()  # Raises if the connection cannot be opened
         except serial.SerialException as err:
-            self.get_logger().error("Failed to connect to dongle: %s", err)
+            self.get_logger().error(f"Failed to connect to dongle: {err}")
             raise err
-        self.get_logger().info("Connected to dongle on COM port %s", self.serial_socket.port)
-        self.command_broadcast("Battery:Percentage")  # TODO: Why?
+        self.get_logger().info(f"Connected to dongle on COM port {self.serial_socket.port}")
+        self.command_broadcast("Battery:Show")  # TODO: Why?
         self.serial_line_reader = PeriodicSerialLineReader(self.serial_socket)
 
         # Create publishers
-        self.publisher = self.create_publisher(std_msgs.msg.String, "topic", 10)
+        self.button_press_publisher = self.create_publisher(
+            bee_buttons_interfaces.msg.BeeButtonPress, "button_press", rclpy.qos.qos_profile_system_default
+        )
 
         # Start timer to poll the serial port
         update_rate_hz = self.get_parameter(update_rate_param.name).get_parameter_value().double_value
@@ -79,18 +84,57 @@ class BeeButtonsNode(Node):
         self.serial_line_reader.update()
 
         while self.serial_line_reader.has_next_line():
-            btn_msg_raw = self.serial_line_reader.read_next_line().decode().strip()
-            self.get_logger().info("Received message: %s", btn_msg_raw)
+            button_message = self.serial_line_reader.read_next_line().decode().strip()
+            self.get_logger().info(f'Received button message: "{button_message}"')
+            self.handle_button_message(button_message)
 
-            ros_msg = std_msgs.msg.String(btn_msg_raw)
-            self.publisher.publish(ros_msg)
+    def handle_button_message(self, button_message: str) -> None:
+        button_msg_split = button_message.split(self.COMMAND_SEPARATOR, 1)
+        node_id = button_msg_split[0]
+        button_message_contents = button_msg_split[1]
+
+        header = std_msgs.msg.Header(stamp=self.get_clock().now().to_msg())
+
+        if button_message_contents == "Pressed":
+            button_press_ros_msg = bee_buttons_interfaces.msg.BeeButtonPress(
+                header=header,
+                node_id=node_id,
+                press_type=bee_buttons_interfaces.msg.BeeButtonPress.PRESSED,
+            )
+            self.button_press_publisher.publish(button_press_ros_msg)
+
+        elif button_message_contents == "Double Pressed":
+            button_press_ros_msg = bee_buttons_interfaces.msg.BeeButtonPress(
+                header=header,
+                node_id=node_id,
+                press_type=bee_buttons_interfaces.msg.BeeButtonPress.DOUBLE_PRESSED,
+            )
+            self.button_press_publisher.publish(button_press_ros_msg)
+
+        elif button_message_contents == "Long Press":
+            button_press_ros_msg = bee_buttons_interfaces.msg.BeeButtonPress(
+                header=header,
+                node_id=node_id,
+                press_type=bee_buttons_interfaces.msg.BeeButtonPress.LONG_PRESS,
+            )
+            self.button_press_publisher.publish(button_press_ros_msg)
+
+        elif button_message_contents.startswith("Battery Percentage"):
+            pass  # TODO: Add battery information publisher
+
+        else:
+            self.get_logger().warn(
+                f'Unknown button message contents: "{button_message_contents}" (from node {node_id})'
+            )
 
     def command_specific_button(self, node_id: str, command: str) -> None:
         command = f"{node_id}{self.COMMAND_SEPARATOR}{command}{self.COMMAND_END}"
+        self.get_logger().info(f'Sending command: "{command}" to button {node_id}')
         self.serial_socket.write(command.encode())
 
     def command_broadcast(self, command: str) -> None:
         command = f"{self.BROADCAST_COMMAND}{self.COMMAND_SEPARATOR}{command}{self.COMMAND_END}"
+        self.get_logger().info(f'Sending command: "{command}" to all nodes')
         self.serial_socket.write(command.encode())
 
 

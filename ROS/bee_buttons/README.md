@@ -78,3 +78,29 @@ These steps are based on the following resources:
 - <https://medium.com/ros2-tips-and-tricks/running-ros2-nodes-in-a-python-virtual-environment-b31c1b863cdb>
 - <https://docs.ros.org/en/humble/How-To-Guides/Using-Python-Packages.html>
 - <https://www.theconstruct.ai/ros2-how-to-install-third-party-python-packages-using-ros2-5/>
+
+## Usage
+
+### Set up permissions
+
+Before starting the node, you need to assign the proper rights to access the serial device. If you do not do this, you will likely get an error such as:
+
+```text
+[Errno 13] could not open port /dev/ttyACM0: [Errno 13] Permission denied: '/dev/ttyACM0'
+```
+
+You have two options:
+
+- Set up access rights for this session (resets when the logging out or PC shuts down):
+
+  ```bash
+  sudo chmod a+rw /dev/ttyACM0
+  ```
+
+- Add the current user to the `dialout` group to gain access permanently:
+
+  ```bash
+  sudo usermod -a -G dialout $USER
+  ```
+
+  Make sure to log out and in again to make the changes to into effect.

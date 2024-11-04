@@ -29,10 +29,6 @@ class PeriodicSerialLineReader:
         # Read all available data on the socket
         read_data = self.serial_socket.read(self.serial_socket.in_waiting)
 
-        # No data read means that a timeout has occurred
-        if not read_data:
-            raise serial.SerialException("Timeout on reading data")
-
         # We might have a partial line left from the last iteration, so we need to prepend the read data with that
         partial_line_buffer_extended_with_read_data = self.partial_line_buffer + read_data
 
@@ -40,8 +36,11 @@ class PeriodicSerialLineReader:
         read_lines = partial_line_buffer_extended_with_read_data.split(b"\n")
 
         # If the last element in the read data was a newline, the last element of the returned read_lines list is empty.
-        # However, if the last element of the returned read_lines list is not empty, it contains a partial message.
-        if read_lines[-1]:
+        if read_lines[-1] == b"":
+            # We do not want to store empty last element since it is not a read line
+            read_lines.pop(-1)
+        else:
+            # If the last element of the returned read_lines list is not empty, it contains a partial message.
             # Remove the partial message from the read_lines list and store in the partial line buffer
             self.partial_line_buffer = read_lines.pop(-1)
 
@@ -60,4 +59,4 @@ class PeriodicSerialLineReader:
 
         You should first check with `has_next_line()` if there is a next line.
         """
-        return self.lines_buffer.pop(1)
+        return self.lines_buffer.pop(0)

@@ -1,2 +1,5 @@
+__pycache__
+
+
 # Opinionated formatting and linting tools
 .ruff.toml
