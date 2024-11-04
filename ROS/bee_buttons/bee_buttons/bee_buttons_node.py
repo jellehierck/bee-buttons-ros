@@ -33,7 +33,7 @@ class BeeButtonsNode(Node):
     - `/button_battery_info`: Publishes battery information messages as a response to a battery information request.
 
     Services (WIP):
-    - TODO: ROS services will be used to send commands to connected buttons, such as changing colors or playing sounds.
+    - `~/set_button_color`: Set or clear color effects on a button. Can also set the brightness.
 
     See also: https://github.com/utwente-interaction-lab/Bee-Buttons
     """
@@ -257,22 +257,22 @@ class BeeButtonsNode(Node):
 
         elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_FULL:
             # TODO: Move check for valid color into separate function to keep DRY
-            if not self.is_valid_color(request.color):
-                self.get_logger().error(f"Received unknown color {request.color}")
+            if not self.is_valid_color(request.color.value):
+                self.get_logger().error(f"Received unknown color {request.color.value}")
                 return response
-            effect_command = f"{self.COMMAND_FULL}{self.COMMAND_SEPARATOR}{request.color}"
+            effect_command = f"{self.COMMAND_FULL}{self.COMMAND_SEPARATOR}{request.color.value}"
 
         elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_CIRCLE:
-            if not self.is_valid_color(request.color):
-                self.get_logger().error(f"Received unknown color {request.color}")
+            if not self.is_valid_color(request.color.value):
+                self.get_logger().error(f"Received unknown color {request.color.value}")
                 return response
-            effect_command = f"{self.COMMAND_CIRCLE}{self.COMMAND_SEPARATOR}{request.color}"
+            effect_command = f"{self.COMMAND_CIRCLE}{self.COMMAND_SEPARATOR}{request.color.value}"
 
         elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_BLINK:
-            if not self.is_valid_color(request.color):
-                self.get_logger().error(f"Received unknown color {request.color}")
+            if not self.is_valid_color(request.color.value):
+                self.get_logger().error(f"Received unknown color {request.color.value}")
                 return response
-            effect_command = f"{self.COMMAND_BLINK}{self.COMMAND_SEPARATOR}{request.color}"
+            effect_command = f"{self.COMMAND_BLINK}{self.COMMAND_SEPARATOR}{request.color.value}"
 
         else:
             # Unknown effect, print a warning but do nothing

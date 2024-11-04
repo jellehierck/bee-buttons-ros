@@ -178,6 +178,20 @@ Or you can read the battery information:
 ros2 topic echo /button_battery_info bee_buttons_interfaces/msg/BeeButtonBatteryInfo
 ```
 
+### Setting button colors from a terminal
+
+To set button colors from a terminal, execute one of the following example commands while the node is running:
+
+```bash
+ros2 service call /bee_buttons/set_button_color bee_buttons_interfaces/srv/BeeButtonSetColor "{broadcast: true, effect: \"Full\", color: { value: \"Pink\" } }"
+
+ros2 service call /bee_buttons/set_button_color bee_buttons_interfaces/srv/BeeButtonSetColor "{broadcast: true, effect: \"Rainbow\" }"
+
+ros2 service call /bee_buttons/set_button_color bee_buttons_interfaces/srv/BeeButtonSetColor "{broadcast: true, effect: \"Clear\" }"
+
+ros2 service call /bee_buttons/set_button_color bee_buttons_interfaces/srv/BeeButtonSetColor "{broadcast: true, effect: \"Blink\", color: { value: \"Purple\" }, brightness: 48 }"
+```
+
 ## Author
 
 Jelle Hierck (<j.j.hierck@student.utwente.nl>)

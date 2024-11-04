@@ -12,4 +12,4 @@ string PINK = "Pink"
 string NOT_SET = "not set"
 
 # Color field
-string color NOT_SET
+string value NOT_SET
