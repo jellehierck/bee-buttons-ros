@@ -1,22 +1,39 @@
 # Bee Buttons ROS 2 interface
 
-## Installing
+A ROS 2 interface for the Bee Buttons.
 
-### Using `rosdep`
+## Installation
+
+### Preparing the workspace
+
+This package should be installed inside the `src` folder of a `colcon` workspace, e.g.
+
+```bash
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+git clone <this repository URL>
+```
+
+### Installing dependencies
+
+Before building, some dependencies are needed.
+
+#### Using `rosdep`
 
 Run the following command to install all dependencies declared in `package.xml` packages inside this workspace:
 
+**Note**: this package depends on pure Python packages, which will be installed into your global Python interpreter. This pollutes your global Python installation, which may not be what you want. Consider using a virtual environment instead (explained below).
+
 ```bash
+cd ~/ros2_ws
 rosdep install --from-paths src --ignore-src  # add the `-y` flag to automatically install all dependencies
 ```
 
-### Virtual environment (WIP)
+#### Using virtual environment (WIP)
 
-**Note: these instructions do not work properly yet! More testing is required to get installation in a virtual environment working.**
+**Warning: these instructions do not work properly yet! More testing is required to get installation in a virtual environment working. Until then, use [the `rosdep` approach instead](#using-rosdep).**
 
 If you do not want to pollute the global installation of Python (which is recommended), the following steps allow you to install the additional dependencies to a virtual environment and run ROS from that environment.
-
-**Important:** If you use `rosdep` to install dependencies which include Python packages, they will probably be installed globally. Use that command with caution.
 
 0. Install dependencies:
 
@@ -79,9 +96,16 @@ These steps are based on the following resources:
 - <https://docs.ros.org/en/humble/How-To-Guides/Using-Python-Packages.html>
 - <https://www.theconstruct.ai/ros2-how-to-install-third-party-python-packages-using-ros2-5/>
 
-## Usage
+### Building the nodes
 
-### Set up permissions
+Run the following commands to build the ROS 2 nodes:
+
+```bash
+cd ~/ros2_ws
+colcon build
+```
+
+### Setup permissions
 
 Before starting the node, you need to assign the proper rights to access the serial device. If you do not do this, you will likely get an error such as:
 
@@ -104,3 +128,60 @@ You have two options:
   ```
 
   Make sure to log out and in again to make the changes to into effect.
+
+## Usage
+
+All commands in this section assume you are in the workspace folder and have sourced it:
+
+```bash
+cd ~/ros2_ws
+source install/setup.bash
+```
+
+### Run the node
+
+Run the node with the following command:
+
+```bash
+ros2 run bee_buttons bee_buttons
+```
+
+If you get permission errors, follow the steps in the [Setup permissions section](#setup-permissions)
+
+Press CTRL-C to interrupt the node.
+
+### Configure the node
+
+When the node is running, you can obtain detailed information about the parameters to configure it with:
+
+```bash
+ros2 param describe /bee_buttons $(ros2 param list /bee_buttons)
+```
+
+You can re-run the node with adjusted parameters with:
+
+```bash
+ros2 run bee_buttons bee_buttons --ros-args -p update_rate:=50.0 -p battery_info_on_startup:=false
+```
+
+### Read topic contents
+
+While the node is running in one terminal, you can open another terminal and read the ROS topics with:
+
+```bash
+ros2 topic echo /button_press bee_buttons_interfaces/msg/BeeButtonPress
+```
+
+Or you can read the battery information:
+
+```bash
+ros2 topic echo /button_battery_info bee_buttons_interfaces/msg/BeeButtonBatteryInfo
+```
+
+## Author
+
+Jelle Hierck (<j.j.hierck@student.utwente.nl>)
+
+## Acknowledgments
+
+The ROS 2 interface was written as part of the thesis of Jelle Hierck at Nakama Robotics Lab (BE-BRT) at the University of Twente.
