@@ -283,8 +283,7 @@ class BeeButtonsNode(Node):
         if request.broadcast:
             self.command_broadcast(command=effect_command)
         else:
-            for node_id in request.node_ids:
-                self.command_specific_button(node_id=node_id, command=effect_command)
+            self.command_multiple_buttons(request.node_ids)
 
         # Also set the brightness
         # TODO: split into separate function?
@@ -296,12 +295,11 @@ class BeeButtonsNode(Node):
                 return response
             brightness_command = f"{self.COMMAND_BRIGHTNESS}{self.COMMAND_SEPARATOR}{request.brightness}"
 
-            # TODO: Move to function call?
+            # Check if the command should be broadcasted or sent to specific node(s)
             if request.broadcast:
                 self.command_broadcast(command=brightness_command)
             else:
-                for node_id in request.node_ids:
-                    self.command_specific_button(node_id=node_id, command=brightness_command)
+                self.command_multiple_buttons(request.node_ids)
 
         # Return the service response, which is empty but still required
         return response
@@ -310,6 +308,16 @@ class BeeButtonsNode(Node):
     def is_valid_color(cls, color: str) -> bool:
         """Whether a color string is part of the valid colors to set for a button."""
         return color in cls.COMMAND_VALID_COLORS
+
+    def command_multiple_buttons(self, node_ids: list[str], command: str) -> None:
+        """
+        Push a message to multiple buttons.
+
+        :param node_ids: Node IDs of the buttons to push to.
+        :param command: Command to send.
+        """
+        for node_id in node_ids:
+            self.command_specific_button(node_id=node_id, command=command)
 
     def command_specific_button(self, node_id: str, command: str) -> None:
         """
