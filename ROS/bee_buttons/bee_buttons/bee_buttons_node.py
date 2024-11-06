@@ -6,10 +6,10 @@ from rclpy.node import Node
 from rcl_interfaces.msg import ParameterDescriptor, FloatingPointRange
 
 import rclpy.qos
-import std_msgs.msg
+from std_msgs.msg import Header
 
-import bee_buttons_interfaces.msg
-import bee_buttons_interfaces.srv
+from bee_buttons_interfaces.msg import BeeButtonBatteryInfo, BeeButtonPress
+from bee_buttons_interfaces.srv import BeeButtonSetColor
 
 from .periodic_serial_line_reader import PeriodicSerialLineReader
 
@@ -53,8 +53,6 @@ class BeeButtonsNode(Node):
     COMMAND_BLINK = "Blink"
 
     COMMAND_BRIGHTNESS = "Brightness"
-    MIN_BRIGHTNESS = 0
-    MAX_BRIGHTNESS = 255
 
     COMMAND_VALID_COLORS = ["Red", "Blue", "Green", "Purple", "Yellow", "Orange", "Cyan", "Pink"]
 
@@ -102,19 +100,19 @@ class BeeButtonsNode(Node):
 
         # Create publishers
         self.button_press_publisher = self.create_publisher(
-            bee_buttons_interfaces.msg.BeeButtonPress,
+            BeeButtonPress,
             "button_press",
             rclpy.qos.qos_profile_system_default,
         )
         self.button_battery_info_publisher = self.create_publisher(
-            bee_buttons_interfaces.msg.BeeButtonBatteryInfo,
+            BeeButtonBatteryInfo,
             "button_battery_info",
             rclpy.qos.qos_profile_system_default,
         )
 
         # Create services
         self.set_button_color_service = self.create_service(
-            bee_buttons_interfaces.srv.BeeButtonSetColor,
+            BeeButtonSetColor,
             "~/set_button_color",  # Prepend the node name using `~`
             self.set_color_service,
         )
@@ -180,32 +178,32 @@ class BeeButtonsNode(Node):
         node_id = button_msg_split[0]
         button_message_contents = button_msg_split[1]
 
-        header = std_msgs.msg.Header(stamp=self.get_clock().now().to_msg())
+        header = Header(stamp=self.get_clock().now().to_msg())
 
         if button_message_contents == "Pressed":
             # Single button press
-            button_press_ros_msg = bee_buttons_interfaces.msg.BeeButtonPress(
+            button_press_ros_msg = BeeButtonPress(
                 header=header,
                 node_id=node_id,
-                press_type=bee_buttons_interfaces.msg.BeeButtonPress.PRESSED,
+                press_type=BeeButtonPress.PRESSED,
             )
             self.button_press_publisher.publish(button_press_ros_msg)
 
         elif button_message_contents == "Double Pressed":
             # Double button press
-            button_press_ros_msg = bee_buttons_interfaces.msg.BeeButtonPress(
+            button_press_ros_msg = BeeButtonPress(
                 header=header,
                 node_id=node_id,
-                press_type=bee_buttons_interfaces.msg.BeeButtonPress.DOUBLE_PRESSED,
+                press_type=BeeButtonPress.DOUBLE_PRESSED,
             )
             self.button_press_publisher.publish(button_press_ros_msg)
 
         elif button_message_contents == "Long Press":
             # Long button press
-            button_press_ros_msg = bee_buttons_interfaces.msg.BeeButtonPress(
+            button_press_ros_msg = BeeButtonPress(
                 header=header,
                 node_id=node_id,
-                press_type=bee_buttons_interfaces.msg.BeeButtonPress.LONG_PRESS,
+                press_type=BeeButtonPress.LONG_PRESS,
             )
             self.button_press_publisher.publish(button_press_ros_msg)
 
@@ -219,7 +217,7 @@ class BeeButtonsNode(Node):
             # Split the message (which automatically handles multiple spaces in a row)
             battery_values_split = button_message_contents.split()
 
-            battery_info_ros_msg = bee_buttons_interfaces.msg.BeeButtonBatteryInfo(
+            battery_info_ros_msg = BeeButtonBatteryInfo(
                 header=header,
                 node_id=node_id,
                 battery_percentage=int(battery_values_split[0]),
@@ -236,9 +234,9 @@ class BeeButtonsNode(Node):
 
     def set_color_service(
         self,
-        request: bee_buttons_interfaces.srv.BeeButtonSetColor.Request,
-        response: bee_buttons_interfaces.srv.BeeButtonSetColor.Response,
-    ) -> bee_buttons_interfaces.srv.BeeButtonSetColor.Response:
+        request: BeeButtonSetColor.Request,
+        response: BeeButtonSetColor.Response,
+    ) -> BeeButtonSetColor.Response:
         """
         Callback for the service to set button colors.
 
@@ -249,26 +247,26 @@ class BeeButtonsNode(Node):
         :return: The service response
         """
         # Determine which effect is set
-        if request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_CLEAR:
+        if request.effect == BeeButtonSetColor.Request.EFFECT_CLEAR:
             effect_command = self.COMMAND_CLEAR
 
-        elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_RAINBOW:
+        elif request.effect == BeeButtonSetColor.Request.EFFECT_RAINBOW:
             effect_command = self.COMMAND_RAINBOW
 
-        elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_FULL:
+        elif request.effect == BeeButtonSetColor.Request.EFFECT_FULL:
             # TODO: Move check for valid color into separate function to keep DRY
             if not self.is_valid_color(request.color.value):
                 self.get_logger().error(f"Received unknown color {request.color.value}")
                 return response
             effect_command = f"{self.COMMAND_FULL}{self.COMMAND_SEPARATOR}{request.color.value}"
 
-        elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_CIRCLE:
+        elif request.effect == BeeButtonSetColor.Request.EFFECT_CIRCLE:
             if not self.is_valid_color(request.color.value):
                 self.get_logger().error(f"Received unknown color {request.color.value}")
                 return response
             effect_command = f"{self.COMMAND_CIRCLE}{self.COMMAND_SEPARATOR}{request.color.value}"
 
-        elif request.effect == bee_buttons_interfaces.srv.BeeButtonSetColor.Request.EFFECT_BLINK:
+        elif request.effect == BeeButtonSetColor.Request.EFFECT_BLINK:
             if not self.is_valid_color(request.color.value):
                 self.get_logger().error(f"Received unknown color {request.color.value}")
                 return response
@@ -287,8 +285,11 @@ class BeeButtonsNode(Node):
 
         # Also set the brightness
         # TODO: split into separate function?
-        if request.brightness != bee_buttons_interfaces.srv.BeeButtonSetColor.Request.BRIGHTNESS_MAINTAIN:
-            if request.brightness < self.MIN_BRIGHTNESS or request.brightness > self.MAX_BRIGHTNESS:
+        if request.brightness != BeeButtonSetColor.Request.BRIGHTNESS_MAINTAIN:
+            if (
+                request.brightness < BeeButtonSetColor.Request.MIN_BRIGHTNESS
+                or request.brightness > BeeButtonSetColor.Request.MAX_BRIGHTNESS
+            ):
                 self.get_logger().error(
                     f"Cannot set brightness to {request.brightness}, must be in range {self.MIN_BRIGHTNESS}-{self.MAX_BRIGHTNESS}"
                 )

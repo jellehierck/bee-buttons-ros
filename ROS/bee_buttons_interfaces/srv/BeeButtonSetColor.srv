@@ -21,8 +21,9 @@ string effect
 BeeButtonColor color
 
 ### Brightness ###
-# Special value which will maintain the current brightness
-int16 BRIGHTNESS_MAINTAIN = -1
+int16 BRIGHTNESS_MAINTAIN = -1  # Special value which will maintain the current brightness
+int16 BRIGHTNESS_MIN = 0  # Minimum allowed value
+int16 BRIGHTNESS_MAX = 255  # Maximum allowed value
 # Set the brightness of the button LEDs on a scale from 0-255, or -1 to not change the brightness
 int16 brightness -1
 
